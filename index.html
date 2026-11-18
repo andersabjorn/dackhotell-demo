@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Däckhotell · Woxnadalens Bilservice</title>
+  <style>
+:root {
+  --ink: #141414;
+  --ink-2: #2c2c2c;
+  --muted: #5a5a5a;
+  --muted-2: #7a7a7a;
+  --line: #e4e4e4;
+  --line-2: #ececec;
+  --bg: #f2f2f3;
+  --paper: #ffffff;
+  --red: #c41a2b;
+  --red-dark: #9e1423;
+  --red-soft: #fdecee;
+  --green: #157a45;
+  --green-soft: #e6f5ec;
+  --amber: #8a5a00;
+  --amber-soft: #fff4d8;
+  --blue: #1e4a86;
+  --blue-soft: #e7eef8;
+  --grey-soft: #f0f0f0;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.05);
+  --radius: 14px;
+  --nav-h: 62px;
+  --font: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.45; }
+button, input, select, textarea { font-family: inherit; font-size: 16px; }
+button { cursor: pointer; }
+a { color: var(--red); }
+#app { min-height: 100dvh; display: flex; flex-direction: column; }
+.demo-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 6px 14px; background: #1a1a1a; color: #f0f0f0;
+  font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+  font-weight: 600;
+}
+.demo-bar span { opacity: .85; }
+.demo-bar button {
+  background: none; border: 1px solid rgba(255,255,255,.3); color: #fff;
+  border-radius: 999px; padding: 4px 10px; font-size: 11px; letter-spacing: .03em;
+  text-transform: uppercase; font-weight: 600;
+}
+.demo-bar button:active { background: rgba(255,255,255,.1); }
+
+.top {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 16px 10px;
+}
+.top-logo { display: flex; align-items: center; justify-content: center; padding: 0 0 8px; }
+.top-logo img { height: 38px; width: auto; display: block; }
+.switcher {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+  background: var(--bg); padding: 3px; border-radius: 12px;
+}
+.switcher button {
+  border: 0; background: transparent; color: var(--muted);
+  height: 36px; border-radius: 9px; font-weight: 650; font-size: 14px;
+}
+.switcher button.on { background: var(--paper); color: var(--ink); box-shadow: var(--shadow); }
+.stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+  margin-top: 8px;
+}
+.stat {
+  background: var(--bg); border-radius: 10px; padding: 6px 6px 5px; text-align: center;
+}
+.stat b { display: block; font-size: 16px; letter-spacing: -.02em; line-height: 1.15; }
+.stat span { display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+.content { flex: 1; padding: 14px 16px 24px; padding-bottom: calc(24px + var(--nav-h)); }
+.content.kund { padding: 10px 16px 20px; }
+.content.kund h1 { font-size: 24px; margin-bottom: 6px; }
+.content.kund .lead { margin-bottom: 10px; font-size: 14px; }
+.content.kund .field { margin-bottom: 8px; }
+.content.kund .field input, .content.kund .field select { height: 48px; }
+.content.kund .check { margin: 2px 0 12px; }
+
+h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.03em; margin: 0 0 8px; font-weight: 750; }
+h2 { font-size: 20px; letter-spacing: -.02em; margin: 0 0 10px; font-weight: 700; }
+h3 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; font-weight: 700; }
+.lead { color: var(--muted); margin: 0 0 16px; font-size: 15px; }
+
+.card {
+  background: var(--paper); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--line-2);
+  padding: 14px 14px;
+}
+.card + .card { margin-top: 10px; }
+.card.tap { width: 100%; text-align: left; display: block; }
+.card.tap:active { transform: scale(.99); }
+
+.field { margin: 0 0 12px; }
+.field label { display: block; font-size: 13px; font-weight: 650; margin: 0 0 6px; color: var(--ink-2); }
+.field input, .field select, .field textarea {
+  width: 100%; border: 1px solid #d6d6d6; background: #fff; color: var(--ink);
+  border-radius: 12px; padding: 0 14px; height: 52px;
+  outline: none; appearance: none; -webkit-appearance: none;
+}
+.field textarea { height: auto; min-height: 88px; padding: 12px 14px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--ink); box-shadow: 0 0 0 3px rgba(20,20,20,.08);
+}
+.field select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='none' stroke='%23141414' stroke-width='1.6' d='M3 6l5 5 5-5'/></svg>");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 36px;
+}
+.reg-input { font-family: var(--mono); letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
+
+.check {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 4px 0 16px; font-size: 14px; color: var(--ink-2);
+}
+.check input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--red); flex: none; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 52px; border: 0; border-radius: 12px;
+  background: var(--red); color: #fff; font-weight: 700; font-size: 16px;
+  letter-spacing: -.01em;
+}
+.btn:active { background: var(--red-dark); }
+.btn:disabled { background: #c8c8c8; color: #fff; }
+.btn.secondary { background: var(--ink); color: #fff; }
+.btn.secondary:active { background: #000; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn.ghost:active { background: var(--bg); }
+.btn.ok { background: var(--green); }
+.btn.sm { height: 44px; font-size: 15px; width: auto; padding: 0 16px; }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-wrap input {
+  width: 100%; height: 56px; border-radius: 16px; border: 1px solid #d6d6d6;
+  padding: 0 16px 0 46px; font-size: 18px; font-weight: 600; outline: none;
+  background: var(--paper); box-shadow: var(--shadow);
+}
+.search-wrap input:focus { border-color: var(--ink); }
+.search-wrap .ico {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  width: 20px; height: 20px; color: var(--muted);
+}
+
+.regnr { font-family: var(--mono); font-weight: 700; letter-spacing: .08em; font-size: 18px; }
+.meta { color: var(--muted); font-size: 13px; }
+.row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.row .left { min-width: 0; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 4px 8px; font-size: 15px; margin: 8px 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-weight: 600; }
+
+.badge {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 8px;
+  border-radius: 999px; font-size: 11px; font-weight: 750; letter-spacing: .04em;
+  text-transform: uppercase; white-space: nowrap; flex: none;
+}
+.badge.inne { background: var(--green-soft); color: var(--green); }
+.badge.ute { background: var(--grey-soft); color: #555; }
+.badge.vantar { background: var(--amber-soft); color: var(--amber); }
+.badge.skickat { background: var(--grey-soft); color: #555; }
+.badge.levererat { background: var(--green-soft); color: var(--green); }
+.badge.fel { background: var(--red-soft); color: var(--red); }
+.badge.besvarad { background: var(--blue-soft); color: var(--blue); }
+.badge.demo { background: #111; color: #fff; height: 20px; font-size: 10px; }
+
+.qr-block { display: flex; flex-direction: column; align-items: center; margin: 0 0 12px; }
+.qr-frame {
+  background: #fff; border: 1px solid var(--line); border-radius: 16px;
+  padding: 10px; box-shadow: var(--shadow);
+}
+.qr-frame svg { display: block; width: 108px; height: 108px; }
+.qr-block p { margin: 6px 0 0; font-size: 11px; color: var(--muted); text-align: center; max-width: 260px; line-height: 1.35; }
+
+.workshop-foot {
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 13px; text-align: center; line-height: 1.45;
+}
+.workshop-foot strong { color: var(--ink-2); font-weight: 700; }
+
+.success { text-align: center; padding: 8px 0 6px; }
+.success .mark {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--green-soft);
+  color: var(--green); display: flex; align-items: center; justify-content: center;
+  margin: 4px auto 14px;
+}
+.sms-bubble-wrap { margin: 18px 0 8px; text-align: left; }
+.sms-label { font-size: 12px; color: var(--muted); margin: 0 0 6px; display: flex; justify-content: space-between; }
+.sms-bubble {
+  background: #e8e8ed; border-radius: 18px 18px 18px 5px;
+  padding: 12px 14px; font-size: 15px; line-height: 1.45; color: var(--ink);
+}
+.sms-bubble.out {
+  background: #1f1f1f; color: #fff; border-radius: 18px 18px 5px 18px;
+}
+
+.botnav {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(255,255,255,.96); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  z-index: 20;
+}
+.botnav button {
+  border: 0; background: none; color: var(--muted-2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; font-size: 10px; font-weight: 650; letter-spacing: .01em; height: var(--nav-h);
+}
+.botnav button.on { color: var(--ink); }
+.botnav button svg { width: 22px; height: 22px; display: block; }
+.botnav button.on svg { stroke-width: 2.1; }
+
+.zone-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 0 14px; }
+.zone-tabs button {
+  height: 48px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper);
+  font-weight: 700; color: var(--ink-2);
+}
+.zone-tabs button small { display: block; font-weight: 550; color: var(--muted); font-size: 10px; }
+.zone-tabs button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.zone-tabs button.on small { color: rgba(255,255,255,.7); }
+
+.shelf-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.slot {
+  display: block; width: 100%; text-align: left;
+  border: 1px solid var(--line); background: var(--paper); border-radius: 12px;
+  padding: 8px 7px 7px; min-height: 68px;
+}
+.slot.free { background: #fafafa; border-style: dashed; }
+.slot.occ { background: #171717; border-color: #171717; color: #fff; }
+.slot .sid { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--muted); }
+.slot.occ .sid { color: rgba(255,255,255,.55); }
+.slot .sreg { font-family: var(--mono); font-weight: 700; letter-spacing: .04em; font-size: 12px; margin-top: 2px; }
+.slot .ssub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.slot.occ .ssub { color: rgba(255,255,255,.7); }
+.slot:active { transform: scale(.98); }
+
+.legend { display: flex; gap: 14px; margin: 0 0 12px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.legend .l-occ { background: #171717; }
+.legend .l-free { background: #fafafa; border: 1px dashed #bbb; }
+
+.banner {
+  background: var(--green-soft); color: var(--green); border-radius: 12px;
+  padding: 12px 14px; font-weight: 650; margin-bottom: 14px; font-size: 15px;
+}
+.banner.warn { background: var(--amber-soft); color: var(--amber); }
+.preview {
+  background: var(--paper); border-radius: var(--radius); border: 1px solid var(--line);
+  padding: 14px; margin: 0 0 14px; box-shadow: var(--shadow);
+}
+.preview .from { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 650; }
+
+.list-item {
+  display: block; width: 100%; text-align: left;
+  background: var(--paper); border: 1px solid var(--line-2); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+.reply {
+  margin-top: 8px; background: var(--blue-soft); color: var(--blue);
+  border-radius: 10px 10px 10px 3px; padding: 8px 10px; font-size: 14px;
+}
+
+.toast-wrap {
+  position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + 16px);
+  z-index: 40; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.toast {
+  background: #161616; color: #fff; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; font-weight: 650; box-shadow: var(--shadow); pointer-events: auto;
+}
+
+.back {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 0; background: none; color: var(--ink); font-weight: 650;
+  height: 36px; padding: 0; margin: 0 0 8px; font-size: 15px;
+}
+.err { color: var(--red); font-size: 13px; margin: -6px 0 10px; }
+
+.admin-block { background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.danger { margin-top: 8px; }
+.danger .btn { background: transparent; color: var(--red); border: 1px solid var(--red); }
+.fineprint { font-size: 12px; color: var(--muted-2); text-align: center; margin: 16px 0 0; }
+
+.empty { text-align: center; color: var(--muted); padding: 28px 10px; }
+
+dl.plain { margin: 0; }
+dl.plain div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line-2); font-size: 15px; }
+dl.plain dt { color: var(--muted); }
+dl.plain dd { margin: 0; font-weight: 650; text-align: right; }
+
+@media (min-width: 720px) {
+  #app { max-width: 430px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: var(--bg); min-height: 100dvh; }
+  body { background: #e8e8e8; }
+  .botnav, .toast-wrap, .demo-bar, .top { max-width: 430px; left: 50%; transform: translateX(-50%); width: 100%; }
+  .top, .demo-bar { transform: none; left: auto; width: auto; }
+  .botnav, .toast-wrap { /* keep fixed within column */ }
+}
+
+html, body { overflow-x: hidden; }
+body { min-height: 100dvh; }
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+  window.__QR_MATRIX__ = ["111111101111011001100000001111111", "100000101001011011111010101000001", "101110101010011110001101101011101", "101110100111001111010100101011101", "101110101000010111010100001011101", "100000100010011110001111001000001", "111111101010101010101010101111111", "000000000001110110011010000000000", "100111111000100011000000010010111", "011001011110111100111111000011100", "100111101110010101001011011011111", "010010011111010101111001010100110", "100101101100110010001011101100011", "111110000011011001000001010100100", "010010100011001110111110101111000", "000100001110000010010000010111101", "111011110001101100001011111111000", "110101001001110111011110001010101", "010010100100010110111001100101101", "110001001011101100101010011011111", "110100100001111111010010100001000", "101111011011010010110011000110000", "100010101110000111000001001010011", "100101011001110011101011010100101", "111010100100011110010000111111010", "000000001000100110100000100010110", "111111101110010100011011101010100", "100000101110000000010001100011110", "101110101101110100011011111110010", "101110101010001100011101010101011", "101110100101010111111010010111111", "100000100101010100101000000111111", "111111101010000101010000110110000"];
+  window.__LOGO_SRC__ = "data:image/jpeg;base64,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AAAAAAp2ZWN0b3JEYXRhYm9vbAEAAAAAUGdQc2VudW0AAAAAUGdQcwAAAABQZ1BDAAAAAExlZnRVbnRGI1JsdAAAAAAAAAAAAAAAAFRvcCBVbnRGI1JsdAAAAAAAAAAAAAAAAFNjbCBVbnRGI1ByY0BZAAAAAAAAAAAAEGNyb3BXaGVuUHJpbnRpbmdib29sAAAAAA5jcm9wUmVjdEJvdHRvbWxvbmcAAAAAAAAADGNyb3BSZWN0TGVmdGxvbmcAAAAAAAAADWNyb3BSZWN0UmlnaHRsb25nAAAAAAAAAAtjcm9wUmVjdFRvcGxvbmcAAAAAADhCSU0D7QAAAAAAEABIAAAAAQABAEgAAAABAAE4QklNBCYAAAAAAA4AAAAAAAAAAAAAP4AAADhCSU0EDQAAAAAABAAAAFo4QklNBBkAAAAAAAQAAAAeOEJJTQPzAAAAAAAJAAAAAAAAAAABADhCSU0nEAAAAAAACgABAAAAAAAAAAE4QklNA/UAAAAAAEgAL2ZmAAEAbGZmAAYAAAAAAAEAL2ZmAAEAoZmaAAYAAAAAAAEAMgAAAAEAWgAAAAYAAAAAAAEANQAAAAEALQAAAAYAAAAAAAE4QklNA/gAAAAAAHAAAP////////////////////////////8D6AAAAAD/////////////////////////////A+gAAAAA/////////////////////////////wPoAAAAAP////////////////////////////8D6AAAOEJJTQQAAAAAAAACAAA4QklNBAIAAAAAAAIAADhCSU0EMAAAAAAAAQEAOEJJTQQtAAAAAAAGAAEAAAACOEJJTQQIAAAAAAAQAAAAAQAAAkAAAAJAAAAAADhCSU0EHgAAAAAABAAAAAA4QklNBBoAAAAAA2EAAAAGAAAAAAAAAAAAAAB6AAAB3QAAABYAdwBvAHgAbgBhAGQAYQBsAGUAbgBzAGIAaQBsAHMAZQByAHYAaQBjAGUAMgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAB3QAAAHoAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAG51bGwAAAACAAAABmJvdW5kc09iamMAAAABAAAAAAAAUmN0MQAAAAQAAAAAVG9w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dGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzE0MiA3OS4xNjA5MjQsIDIwMTcvMDcvMTMtMDE6MDY6MzkgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBkZj0iaHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0wMy0xM1QxNDoyNzo0MSswMTowMCIgeG1wOkNyZWF0ZURhdGU9IjIwMjAtMDMtMDRUMTM6Mjg6NDUrMDE6MDAiIHhtcDpNZXRhZGF0YURhdGU9IjIwMjAtMDMtMTNUMTQ6Mjc6NDErMDE6MDAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgSW5EZXNpZ24gMTUuMCAoTWFjaW50b3NoKSIgeG1wTU06RG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjczMmNkZmRjLWY4MWMtODA0MC05Y2U4LTU4MTE1MGM2YTkwNyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpmNWZiZTE0MC01MGQ0LWQwNDYtYTY1ZC0yMTQ4YTA5ZDAzOWIiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0idXVpZDplNzA0YjkxMy1lYTJhLWVhNDQtYmUyNi02N2RlNGI0NGYyNjgiIGRjOmZvcm1hdD0iaW1hZ2UvanBlZyIgcGRmOlByb2R1Y2VyPSJBZG9iZSBQREYgTGlicmFyeSAxNS4wIiBwZGY6VHJhcHBlZD0iRmFsc2UiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSI+IDx4bXBNTTpIaXN0b3J5PiA8cmRmOlNlcT4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImNvbnZlcnRlZCIgc3RFdnQ6cGFyYW1ldGVycz0iZnJvbSBhcHBsaWNhdGlvbi9wZGYgdG8gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZjZmMDA0NGYtMjRjMC02YzQ1LTgxY2MtYzE5NDNmNDRiYmEyIiBzdEV2dDp3aGVuPSIyMDIwLTAzLTEzVDE0OjI3OjQxKzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjb252ZXJ0ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImZyb20gYXBwbGljYXRpb24vcGRmIHRvIGltYWdlL2pwZWciLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImRlcml2ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImNvbnZlcnRlZCBmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvanBlZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZjVmYmUxNDAtNTBkNC1kMDQ2LWE2NWQtMjE0OGEwOWQwMzliIiBzdEV2dDp3aGVuPSIyMDIwLTAzLTEzVDE0OjI3OjQxKzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpmNmYwMDQ0Zi0yNGMwLTZjNDUtODFjYy1jMTk0M2Y0NGJiYTIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ZjZmMDA0NGYtMjRjMC02YzQ1LTgxY2MtYzE5NDNmNDRiYmEyIiBzdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ9InV1aWQ6ZTcwNGI5MTMtZWEyYS1lYTQ0LWJlMjYtNjdkZTRiNDRmMjY4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz7/4gxYSUNDX1BST0ZJTEUAAQEAAAxITGlubwIQAABtbnRyUkdCIFhZWiAHzgACAAkABgAxAABhY3NwTVNGVAAAAABJRUMgc1JHQgAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLUhQICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFjcHJ0AAABUAAAADNkZXNjAAABhAAAAGx3dHB0AAAB8AAAABRia3B0AAACBAAAABRyWFlaAAACGAAAABRnWFlaAAACLAAAABRiWFlaAAACQAAAABRkbW5kAAACVAAAAHBkbWRkAAACxAAAAIh2dWVkAAADTAAAAIZ2aWV3AAAD1AAAACRsdW1pAAAD+AAAABRtZWFzAAAEDAAAACR0ZWNoAAAEMAAAAAxyVFJDAAAEPAAACAxnVFJDAAAE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";
+  </script>
+  <script>
+(function () {
+  const STORAGE_KEY = "woxnadalen-dackhotell-demo-v1";
+  const QR_URL = "https://andersabjorn.github.io/dackhotell-demo/#registrera";
+  const QR_MATRIX = window.__QR_MATRIX__;
+
+  const MONTHS = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
+  const ICO = {
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>',
+    shelves: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>',
+    bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+    sms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7A2.5 2.5 0 0 1 17.5 16H9l-5 4v-13z"/></svg>',
+    gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l1.7-1.3-1.5-2.6-2.1.5a7.7 7.7 0 0 0-2.6-1.5L14.4 3h-4.8L9.1 4.6a7.7 7.7 0 0 0-2.6 1.5l-2.1-.5-1.5 2.6L4.6 9.5a7.6 7.6 0 0 0 0 3l-1.7 1.3 1.5 2.6 2.1-.5a7.7 7.7 0 0 0 2.6 1.5L9.6 21h4.8l.5-1.6a7.7 7.7 0 0 0 2.6-1.5l2.1.5 1.5-2.6-1.7-1.3z"/></svg>',
+    back: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
+    check: '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l5 5 9-10"/></svg>'
+  };
+
+  const WORKSHOP = {
+    name: "Woxnadalens Bilservice",
+    address: "Krangatan 16",
+    zip: "822 30",
+    city: "Alfta",
+    phone: "0271-103 30",
+    email: "alfta@mekopartner.se",
+    hours: "Vardagar 07–17, lunch 11.30–12.00"
+  };
+
+  const DEFAULT_TEXTS = {
+    bekraftelse: "Hej{namn}! Dina däck för {regnr} är nu registrerade hos Woxnadalens Bilservice däckhotell. Vi hör av oss när det är dags för skifte. Välkommen! / Woxnadalens Bilservice, 0271-103 30",
+    inlamning: "Tack{namn}! Däckset ({typ}) för {regnr} är inlämnat och ligger på hylla {hylla}. / Woxnadalens Bilservice, 0271-103 30",
+    utlamning: "Däckset ({typ}) för {regnr} är utlämnat. Välkommen åter! / Woxnadalens Bilservice, 0271-103 30",
+    kallelseVS: "Dags att byta till sommardäck! Dina vinterdäck för {regnr} finns hos oss på Woxnadalens Bilservice. Svara med önskad vecka (t.ex. Vecka 16) eller ring 0271-103 30.",
+    kallelseSV: "Dags att byta till vinterdäck! Dina sommardäck för {regnr} finns hos oss på Woxnadalens Bilservice. Svara med önskad vecka eller ring 0271-103 30."
+  };
+
+  const SEED_CUSTOMERS = [
+    { id: 1,  namn: "Anna Lindberg",      telefon: "070-000 10 14", regnr: "YTP 184", bil: "Volvo V70",        typ: "Vinter", falgar: true,  monster: 6.8, hylla: "B-02-1", status: "inne",   kommentar: "Kund vill ha SMS före utlämning" },
+    { id: 2,  namn: "Erik Andersson",     telefon: "070-000 10 01", regnr: "KLM 220", bil: "VW Golf",          typ: "Dubb",   falgar: true,  monster: 7.2, hylla: "A-01-1", status: "inne",   kommentar: "" },
+    { id: 3,  namn: "Johan Karlsson",     telefon: "070-000 10 02", regnr: "BHC 419", bil: "Toyota Corolla",   typ: "Vinter", falgar: false, monster: 5.4, hylla: "A-01-2", status: "inne",   kommentar: "Ståhjul, egna fälgar hemma" },
+    { id: 4,  namn: "Maria Svensson",     telefon: "070-000 10 03", regnr: "NHP 332", bil: "Kia Ceed",         typ: "Sommar", falgar: true,  monster: 4.1, hylla: "A-03-1", status: "inne",   kommentar: "Sommarhjul kvar efter höstskifte" },
+    { id: 5,  namn: "Lars Nilsson",       telefon: "070-000 10 04", regnr: "RGT 108", bil: "Volvo XC60",       typ: "Dubb",   falgar: true,  monster: 8.0, hylla: "A-04-2", status: "inne",   kommentar: "Dubbdäck på originalfälg" },
+    { id: 6,  namn: "Eva Gustafsson",     telefon: "070-000 10 05", regnr: "WJD 551", bil: "Škoda Octavia",    typ: "Vinter", falgar: true,  monster: 6.1, hylla: "A-05-1", status: "inne",   kommentar: "" },
+    { id: 7,  namn: "Mikael Persson",     telefon: "070-000 10 06", regnr: "FAK 273", bil: "BMW 320d",         typ: "Vinter", falgar: true,  monster: 5.8, hylla: "B-01-1", status: "inne",   kommentar: "" },
+    { id: 8,  namn: "Karin Olsson",       telefon: "070-000 10 07", regnr: "PLM 640", bil: "Audi A4",          typ: "Dubb",   falgar: true,  monster: 7.5, hylla: "B-01-2", status: "inne",   kommentar: "" },
+    { id: 9,  namn: "Per Eriksson",       telefon: "070-000 10 08", regnr: "CXN 912", bil: "Mercedes C200",    typ: "Vinter", falgar: false, monster: 4.9, hylla: "B-03-1", status: "inne",   kommentar: "" },
+    { id: 10, namn: "Ingrid Holm",        telefon: "070-000 10 09", regnr: "TED 077", bil: "Ford Focus",       typ: "Sommar", falgar: true,  monster: 3.6, hylla: "B-04-2", status: "inne",   kommentar: "Mönsterdjup lite lågt" },
+    { id: 11, namn: "Fredrik Berg",       telefon: "070-000 10 10", regnr: "JSK 388", bil: "Hyundai i30",      typ: "Vinter", falgar: true,  monster: 6.4, hylla: "B-05-1", status: "inne",   kommentar: "" },
+    { id: 12, namn: "Sofia Lundgren",     telefon: "070-000 10 11", regnr: "UBW 225", bil: "Mazda CX-5",       typ: "Dubb",   falgar: true,  monster: 7.0, hylla: "C-01-1", status: "inne",   kommentar: "" },
+    { id: 13, namn: "Henrik Sjöberg",     telefon: "070-000 10 12", regnr: "GAM 804", bil: "Nissan Qashqai",   typ: "Vinter", falgar: true,  monster: 5.2, hylla: "C-01-2", status: "inne",   kommentar: "" },
+    { id: 14, namn: "Johanna Ek",         telefon: "070-000 10 13", regnr: "TRL 163", bil: "Honda CR-V",       typ: "Vinter", falgar: false, monster: 6.9, hylla: "C-02-2", status: "inne",   kommentar: "" },
+    { id: 15, namn: "Mats Nyström",       telefon: "070-000 10 15", regnr: "ODK 447", bil: "Peugeot 308",      typ: "Sommar", falgar: true,  monster: 4.8, hylla: "C-04-1", status: "inne",   kommentar: "" },
+    { id: 16, namn: "Lena Wikström",      telefon: "070-000 10 16", regnr: "XYA 019", bil: "Renault Mégane",   typ: "Dubb",   falgar: true,  monster: 8.2, hylla: "C-05-2", status: "inne",   kommentar: "Nya däck hösten 2026" },
+    { id: 17, namn: "Daniel Holmgren",    telefon: "070-000 10 17", regnr: "LPF 736", bil: "VW Passat",        typ: "Vinter", falgar: true,  monster: 6.0, hylla: "C-06-1", status: "inne",   kommentar: "" },
+    { id: 18, namn: "Camilla Åberg",      telefon: "070-000 10 18", regnr: "HNW 581", bil: "Volvo V90",        typ: "Vinter", falgar: true,  monster: 7.1, hylla: "D-01-1", status: "inne",   kommentar: "" },
+    { id: 19, namn: "Tomas Lindqvist",    telefon: "070-000 10 19", regnr: "SEK 294", bil: "Audi Q5",          typ: "Dubb",   falgar: true,  monster: 5.6, hylla: "D-02-2", status: "inne",   kommentar: "" },
+    { id: 20, namn: "Helena Forsberg",    telefon: "070-000 10 20", regnr: "HYC 860", bil: "Toyota RAV4",      typ: "Vinter", falgar: true,  monster: 6.3, hylla: "D-03-1", status: "inne",   kommentar: "" },
+    { id: 21, namn: "Patrik Sandberg",    telefon: "070-000 10 21", regnr: "MOR 152", bil: "Kia Sportage",     typ: "Sommar", falgar: false, monster: 3.2, hylla: "D-05-1", status: "inne",   kommentar: "Mönsterdjup nära gränsen" },
+    { id: 22, namn: "Annika Bergström",   telefon: "070-000 10 22", regnr: "ZTK 403", bil: "Škoda Kodiaq",     typ: "Vinter", falgar: true,  monster: 7.8, hylla: "D-06-2", status: "inne",   kommentar: "" },
+    { id: 23, namn: "Niklas Öberg",       telefon: "070-000 10 23", regnr: "ABD 618", bil: "Ford Kuga",        typ: "Vinter", falgar: true,  monster: 4.4, hylla: "A-06-1", status: "inne",   kommentar: "" },
+    { id: 24, namn: "Malin Ström",        telefon: "070-000 10 24", regnr: "CFE 971", bil: "VW Tiguan",        typ: "Dubb",   falgar: true,  monster: 6.6, hylla: "B-06-2", status: "inne",   kommentar: "" },
+    { id: 25, namn: "Jonas Falk",         telefon: "070-000 10 25", regnr: "DUG 345", bil: "Volvo XC40",       typ: "Vinter", falgar: true,  monster: 5.9, hylla: "C-03-1", status: "inne",   kommentar: "" },
+    { id: 26, namn: "Cecilia Haglund",    telefon: "070-000 10 26", regnr: "EWH 702", bil: "Mercedes GLC",     typ: "Vinter", falgar: true,  monster: 7.4, hylla: "A-02-2", status: "inne",   kommentar: "" },
+    { id: 27, namn: "Stefan Ekström",     telefon: "070-000 10 27", regnr: "FXL 256", bil: "BMW X3",           typ: "Sommar", falgar: true,  monster: 5.1, hylla: null,     status: "ute",    kommentar: "Utlämnad 12 nov" },
+    { id: 28, namn: "Kristina Blom",      telefon: "070-000 10 28", regnr: "GYJ 839", bil: "Honda Civic",      typ: "Vinter", falgar: true,  monster: 6.2, hylla: null,     status: "ute",    kommentar: "" },
+    { id: 29, namn: "David Norberg",      telefon: "070-000 10 29", regnr: "HZK 174", bil: "Tesla Model Y",    typ: "Vinter", falgar: true,  monster: 8.5, hylla: null,     status: "vantar", kommentar: "Ny kund, väntar på plats" },
+    { id: 30, namn: "Susanne Krantz",     telefon: "070-000 10 30", regnr: "JAL 520", bil: "Citroën C5",       typ: "Sommar", falgar: false, monster: 4.0, hylla: null,     status: "vantar", kommentar: "Ska lämnas in under veckan" }
+  ];
+
+  const FAKE_REPLIES = [
+    { id: 1, text: "Vecka 16 funkar" },
+    { id: 8, text: "Ring mig" },
+    { id: 12, text: "Vecka 17 tack" },
+    { id: 18, text: "Kan ni ta den på en lördag?" },
+    { id: 5, text: "Ok, jag hör av mig" }
+  ];
+
+  function allShelves() {
+    const out = [];
+    "ABCD".split("").forEach(z => {
+      for (let p = 1; p <= 6; p++) {
+        for (let l = 1; l <= 2; l++) {
+          out.push(`${z}-${String(p).padStart(2, "0")}-${l}`);
+        }
+      }
+    });
+    return out;
+  }
+
+  function seedSms() {
+    const items = [
+      [1,  "bekraftelse", "levererat", "2026-11-03T09:14:00+01:00"],
+      [2,  "inlamning",   "levererat", "2026-11-03T10:02:00+01:00"],
+      [5,  "inlamning",   "levererat", "2026-11-04T08:41:00+01:00"],
+      [7,  "bekraftelse", "levererat", "2026-11-05T14:22:00+01:00"],
+      [8,  "inlamning",   "levererat", "2026-11-05T14:28:00+01:00"],
+      [12, "inlamning",   "levererat", "2026-11-06T11:05:00+01:00"],
+      [16, "inlamning",   "levererat", "2026-11-07T09:33:00+01:00"],
+      [18, "bekraftelse", "levererat", "2026-11-10T16:18:00+01:00"],
+      [18, "inlamning",   "levererat", "2026-11-10T16:21:00+01:00"],
+      [21, "inlamning",   "fel",       "2026-11-11T13:40:00+01:00"],
+      [22, "inlamning",   "levererat", "2026-11-12T08:12:00+01:00"],
+      [26, "inlamning",   "levererat", "2026-11-12T09:47:00+01:00"],
+      [27, "utlamning",   "levererat", "2026-11-12T15:03:00+01:00"],
+      [4,  "inlamning",   "levererat", "2026-11-13T10:16:00+01:00"],
+      [29, "bekraftelse", "skickat",   "2026-11-17T17:44:00+01:00"],
+      [3,  "inlamning",   "levererat", "2026-10-28T09:20:00+01:00"]
+    ];
+    return items.map((row, i) => {
+      const [cid, typ, status, at] = row;
+      const c = SEED_CUSTOMERS.find(x => x.id === cid);
+      return {
+        id: i + 1,
+        kundId: cid,
+        typ,
+        status,
+        at,
+        riktning: "ut",
+        text: renderText(DEFAULT_TEXTS[typ === "bekraftelse" ? "bekraftelse" : typ === "utlamning" ? "utlamning" : "inlamning"], c)
+      };
+    });
+  }
+
+  function defaultSettings() {
+    return {
+      avsandare: "WoxBil",
+      texts: Object.assign({}, DEFAULT_TEXTS),
+      sommarStart: "2027-04-01",
+      vinterStart: "2026-10-15",
+      zonPlatser: 6,
+      zonNivaer: 2
+    };
+  }
+
+  function seedState() {
+    return {
+      customers: SEED_CUSTOMERS.map(c => Object.assign({}, c)),
+      sms: seedSms(),
+      settings: defaultSettings(),
+      kallelse: null,
+      nextKundId: 31,
+      nextSmsId: 40
+    };
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.customers)) return parsed;
+      }
+    } catch (e) {}
+    return seedState();
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+  let ui = {
+    mode: "kund",
+    tab: "sok",
+    setId: null,
+    zone: "A",
+    q: "",
+    success: null,
+    toast: null,
+    kallelseRiktning: "vs",
+    formErr: ""
+  };
+  let toastTimer = null;
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function typLabel(t) {
+    if (t === "Dubb") return "Vinter (dubb)";
+    if (t === "Vinter") return "Vinter (friktion)";
+    return "Sommar";
+  }
+
+  function statusLabel(s) {
+    return s === "inne" ? "Inne" : s === "ute" ? "Ute" : "Väntar";
+  }
+
+  function typShort(t) {
+    return t === "Dubb" ? "Dubb" : t === "Vinter" ? "Vinter" : "Sommar";
+  }
+
+  function mm(n) {
+    if (n == null || n === "") return "—";
+    return String(n).replace(".", ",") + " mm";
+  }
+
+  function firstNamePart(namn) {
+    if (!namn) return "";
+    return " " + namn.split(" ")[0];
+  }
+
+  function renderText(tpl, c) {
+    return (tpl || "")
+      .replaceAll("{namn}", firstNamePart(c && c.namn))
+      .replaceAll("{regnr}", (c && c.regnr) || "")
+      .replaceAll("{hylla}", (c && c.hylla) || "—")
+      .replaceAll("{typ}", c ? typLabel(c.typ) : "");
+  }
+
+  function formatTime(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    const pad = n => String(n).padStart(2, "0");
+    return `${d.getDate()} ${MONTHS[d.getMonth()]} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function nowIso() { return new Date().toISOString(); }
+
+  function smsThisMonth() {
+    const now = new Date();
+    return state.sms.filter(s => {
+      const d = new Date(s.at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }).length;
+  }
+
+  function occupiedMap() {
+    const m = {};
+    state.customers.forEach(c => { if (c.hylla && c.status === "inne") m[c.hylla] = c; });
+    return m;
+  }
+
+  function freeShelves(keep) {
+    const occ = occupiedMap();
+    return allShelves().filter(s => !occ[s] || s === keep);
+  }
+
+  function stats() {
+    const inne = state.customers.filter(c => c.status === "inne").length;
+    const tot = allShelves().length;
+    return { inne, lediga: tot - inne, sms: smsThisMonth(), tot };
+  }
+
+  function normalizeRegnr(v) {
+    const s = (v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (s.length >= 6) return s.slice(0, 3) + " " + s.slice(3, 6);
+    return (v || "").toUpperCase().trim();
+  }
+
+  function validRegnr(v) {
+    return /^[A-Z]{3} [0-9]{3}$/.test(normalizeRegnr(v));
+  }
+
+  function normalizePhone(v) {
+    const d = (v || "").replace(/\D/g, "");
+    let n = d;
+    if (n.startsWith("46")) n = "0" + n.slice(2);
+    if (n.length === 10 && n.startsWith("07")) {
+      return n.slice(0, 3) + "-" + n.slice(3, 6) + " " + n.slice(6, 8) + " " + n.slice(8, 10);
+    }
+    return (v || "").trim();
+  }
+
+  function validPhone(v) {
+    const d = (v || "").replace(/\D/g, "");
+    const n = d.startsWith("46") ? "0" + d.slice(2) : d;
+    return /^07\d{8}$/.test(n);
+  }
+
+  function findByReg(reg) {
+    const n = normalizeRegnr(reg);
+    return state.customers.find(c => c.regnr === n);
+  }
+
+  function addSms(kund, typ, text, status, extra) {
+    const item = Object.assign({
+      id: state.nextSmsId++,
+      kundId: kund ? kund.id : null,
+      typ, text, status: status || "skickat",
+      at: nowIso(),
+      riktning: "ut"
+    }, extra || {});
+    state.sms.unshift(item);
+    saveState();
+    return item;
+  }
+
+  function toast(msg) {
+    ui.toast = msg;
+    render();
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { ui.toast = null; render(); }, 2800);
+  }
+
+  function qrSvg(px) {
+    const m = QR_MATRIX;
+    if (!m || !m.length) return "";
+    const n = m.length, border = 2, dim = n + border * 2;
+    let rects = "";
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        if (m[y][x] === "1") rects += `<rect x="${x + border}" y="${y + border}" width="1" height="1"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 ${dim} ${dim}" width="${px}" height="${px}" shape-rendering="crispEdges" role="img" aria-label="QR-kod till registreringssidan"><rect width="${dim}" height="${dim}" fill="#fff"/>${rects}</svg>`;
+  }
+
+  function parseHash() {
+    const hash = (location.hash || "#registrera").replace(/^#/, "");
+    const [path, qs] = hash.split("?");
+    const parts = path.split("/").filter(Boolean);
+    const params = new URLSearchParams(qs || "");
+    if (!parts[0] || parts[0] === "kund" || parts[0] === "registrera") {
+      ui.mode = "kund";
+      ui.success = parts[1] === "tack" ? (params.get("id") || true) : null;
+    } else if (parts[0] === "set" && parts[1]) {
+      ui.mode = "verkstad";
+      ui.tab = "detalj";
+      ui.setId = Number(parts[1]);
+    } else {
+      ui.mode = "verkstad";
+      ui.tab = parts[0] || "sok";
+      if (params.get("q") != null) ui.q = params.get("q");
+      if (params.get("zon")) ui.zone = params.get("zon");
+    }
+  }
+
+  function go(hash) {
+    if (location.hash === "#" + hash) { parseHash(); render(); }
+    else location.hash = hash;
+  }
+
+  function demoBar() {
+    return `<div class="demo-bar">
+      <span>Demodata · ej riktiga kunder</span>
+      <button type="button" data-act="reset">Återställ demo</button>
+    </div>`;
+  }
+
+  function topBar() {
+    const s = stats();
+    return `<header class="top">
+      <div class="top-logo"><img src="${window.__LOGO_SRC__}" alt="Woxnadalens Bilservice"></div>
+      <div class="switcher">
+        <button type="button" class="${ui.mode === "kund" ? "on" : ""}" data-act="mode" data-mode="kund">Kundvy</button>
+        <button type="button" class="${ui.mode === "verkstad" ? "on" : ""}" data-act="mode" data-mode="verkstad">Verkstadsvy</button>
+      </div>
+      ${ui.mode === "verkstad" ? `<div class="stats">
+        <div class="stat"><b>${s.inne}</b><span>däckset inne</span></div>
+        <div class="stat"><b>${s.lediga}</b><span>lediga platser</span></div>
+        <div class="stat"><b>${s.sms}</b><span>SMS denna månad</span></div>
+      </div>` : ""}
+    </header>`;
+  }
+
+  function botNav() {
+    if (ui.mode !== "verkstad") return "";
+    const tabs = [
+      ["sok", "Sök", ICO.search],
+      ["hyllor", "Hyllor", ICO.shelves],
+      ["kallelse", "Kallelse", ICO.bell],
+      ["sms", "SMS", ICO.sms],
+      ["admin", "Admin", ICO.gear]
+    ];
+    const active = ui.tab === "detalj" ? "sok" : ui.tab;
+    return `<nav class="botnav">${tabs.map(([id, lab, ico]) =>
+      `<button type="button" class="${active === id ? "on" : ""}" data-act="tab" data-tab="${id}">${ico}<span>${lab}</span></button>`
+    ).join("")}</nav>`;
+  }
+
+  function toastHtml() {
+    if (!ui.toast) return `<div class="toast-wrap"></div>`;
+    return `<div class="toast-wrap"><div class="toast">${esc(ui.toast)}</div></div>`;
+  }
+
+  function foot() {
+    return `<footer class="workshop-foot">
+      <strong>${esc(WORKSHOP.name)}</strong><br>
+      ${esc(WORKSHOP.address)}, ${esc(WORKSHOP.zip)} ${esc(WORKSHOP.city)}<br>
+      ${esc(WORKSHOP.phone)} · ${esc(WORKSHOP.email)}<br>
+      ${esc(WORKSHOP.hours)}
+    </footer>`;
+  }
+
+  function viewKund() {
+    if (ui.success) return viewKundSuccess();
+    return `<div class="content kund">
+      <h1>Lämna dina däck på däckhotellet</h1>
+      <p class="lead">Fyll i regnr och mobil, så skickar vi ett bekräftelse-SMS.</p>
+      <div class="qr-block">
+        <div class="qr-frame">${qrSvg(132)}</div>
+        <p>QR-kod till registreringssidan.</p>
+      </div>
+      <form id="reg-form" autocomplete="off">
+        <div class="field">
+          <label for="f-regnr">Registreringsnummer</label>
+          <input class="reg-input" id="f-regnr" name="regnr" placeholder="ABC 123" maxlength="7" required>
+        </div>
+        <div class="field">
+          <label for="f-tel">Mobilnummer</label>
+          <input id="f-tel" name="telefon" inputmode="tel" placeholder="070-000 00 00" required>
+        </div>
+        <div class="field">
+          <label for="f-typ">Däcktyp som lämnas in</label>
+          <select id="f-typ" name="typ">
+            <option value="Vinter">Vinter (friktion)</option>
+            <option value="Dubb">Vinter (dubb)</option>
+            <option value="Sommar">Sommar</option>
+          </select>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="f-samtycke" name="samtycke">
+          <span>Jag samtycker till SMS om förvaring, utlämning och säsongsskifte.</span>
+        </label>
+        ${ui.formErr ? `<div class="err">${esc(ui.formErr)}</div>` : ""}
+        <button class="btn" type="submit">Registrera</button>
+      </form>
+      ${foot()}
+    </div>`;
+  }
+
+  function viewKundSuccess() {
+    const id = Number(ui.success);
+    const c = state.customers.find(x => x.id === id) || state.customers[state.customers.length - 1];
+    const text = renderText(state.settings.texts.bekraftelse, c);
+    return `<div class="content kund">
+      <div class="success">
+        <div class="mark">${ICO.check}</div>
+        <h1>Tack! Du är registrerad</h1>
+        <p class="lead">Däcken för <strong>${esc(c.regnr)}</strong> är anmälda till Woxnadalens Bilservice däckhotell. Vi hör av oss när det är dags för skifte.</p>
+      </div>
+      <div class="sms-bubble-wrap">
+        <div class="sms-label"><span>SMS från ${esc(state.settings.avsandare)}</span><span>Nu</span></div>
+        <div class="sms-bubble">${esc(text)}</div>
+      </div>
+      <div class="btn-row" style="margin-top:22px">
+        <button type="button" class="btn ghost" data-act="go" data-hash="/registrera">Registrera en till</button>
+        <button type="button" class="btn secondary" data-act="go" data-hash="/sok?q=${encodeURIComponent(c.regnr)}">Öppna i verkstad</button>
+      </div>
+      ${foot()}
+    </div>`;
+  }
+
+  function searchHits() {
+    const q = (ui.q || "").trim().toLowerCase().replace(/\s+/g, "");
+    const list = state.customers.slice().sort((a, b) => a.regnr.localeCompare(b.regnr, "sv"));
+    if (!q) return list;
+    return list.filter(c =>
+      c.regnr.toLowerCase().replace(/\s+/g, "").includes(q) ||
+      c.namn.toLowerCase().replace(/\s+/g, "").includes(q) ||
+      c.telefon.replace(/\s+/g, "").includes(q) ||
+      (c.hylla || "").toLowerCase().includes(q) ||
+      (c.bil || "").toLowerCase().includes(q)
+    );
+  }
+
+  function kundCard(c) {
+    return `<button type="button" class="list-item" data-act="go" data-hash="/set/${c.id}">
+      <div class="row">
+        <div class="left">
+          <div class="regnr">${esc(c.regnr)}</div>
+          <div style="font-weight:650;margin-top:1px">${esc(c.namn)}</div>
+          <div class="meta">${esc(c.bil)} · ${esc(typShort(c.typ))}${c.falgar ? " · med fälg" : " · utan fälg"} · ${esc(mm(c.monster))}</div>
+          <div class="meta">${c.hylla ? "Hylla " + esc(c.hylla) : "Ingen hylla"}</div>
+        </div>
+        <span class="badge ${c.status}">${esc(statusLabel(c.status))}</span>
+      </div>
+    </button>`;
+  }
+
+  function viewSok() {
+    const hits = searchHits();
+    return `<div class="content">
+      <h2>Sök regnr</h2>
+      <div class="search-wrap">
+        <span class="ico">${ICO.search}</span>
+        <input id="f-q" type="search" placeholder="Regnr, namn eller hylla" value="${esc(ui.q)}" autocomplete="off">
+      </div>
+      ${ui.q ? `<p class="meta" style="margin:-6px 0 12px">${hits.length} träff${hits.length === 1 ? "" : "ar"}</p>` : `<p class="meta" style="margin:-6px 0 12px">Alla ${hits.length} däckset · demodata</p>`}
+      ${hits.length ? hits.map(kundCard).join("") : `<div class="empty">Ingen träff på “${esc(ui.q)}”.</div>`}
+    </div>`;
+  }
+
+  function viewDetalj() {
+    const c = state.customers.find(x => x.id === ui.setId);
+    if (!c) return `<div class="content"><p>Hittades inte.</p></div>`;
+    const options = freeShelves(c.hylla).map(s =>
+      `<option value="${esc(s)}" ${s === c.hylla ? "selected" : ""}>${esc(s)}</option>`
+    ).join("");
+    return `<div class="content">
+      <button type="button" class="back" data-act="go" data-hash="/sok">${ICO.back} Till sök</button>
+      <div class="row" style="margin-bottom:8px">
+        <div class="left">
+          <div class="regnr" style="font-size:22px">${esc(c.regnr)}</div>
+          <h2 style="margin:2px 0 0">${esc(c.namn)}</h2>
+        </div>
+        <span class="badge ${c.status}">${esc(statusLabel(c.status))}</span>
+      </div>
+      <dl class="kv">
+        <dt>Mobil</dt><dd>${esc(c.telefon)}</dd>
+        <dt>Bil</dt><dd>${esc(c.bil || "—")}</dd>
+        <dt>Däcktyp</dt><dd>${esc(typLabel(c.typ))}</dd>
+        <dt>Fälg</dt><dd>${c.falgar ? "Med fälg" : "Utan fälg"}</dd>
+        <dt>Hylla</dt><dd>${esc(c.hylla || "—")}</dd>
+      </dl>
+      ${c.status === "inne"
+        ? `<button type="button" class="btn" data-act="lamna-ut" data-id="${c.id}">Lämna ut och skicka SMS-kvitto</button>`
+        : `<button type="button" class="btn ok" data-act="lamna-in" data-id="${c.id}">Lämna in och skicka SMS-kvitto</button>`}
+      <h3>Uppgifter</h3>
+      <form id="detalj-form" data-id="${c.id}">
+        <div class="field">
+          <label for="d-hylla">Hylla</label>
+          <select id="d-hylla" name="hylla">
+            <option value="">Ingen hylla</option>
+            ${options}
+          </select>
+        </div>
+        <div class="field">
+          <label for="d-monster">Mönsterdjup (mm)</label>
+          <input id="d-monster" name="monster" type="number" inputmode="decimal" step="0.1" min="0" max="16" value="${c.monster ?? ""}">
+        </div>
+        <div class="field">
+          <label for="d-kom">Kommentar</label>
+          <textarea id="d-kom" name="kommentar" rows="3">${esc(c.kommentar || "")}</textarea>
+        </div>
+        <button class="btn secondary" type="submit">Spara uppgifter</button>
+      </form>
+    </div>`;
+  }
+
+  function viewHyllor() {
+    const occ = occupiedMap();
+    const zone = ui.zone;
+    const slots = allShelves().filter(s => s.startsWith(zone + "-"));
+    const used = slots.filter(s => occ[s]).length;
+    const tabs = "ABCD".split("").map(z => {
+      const zs = allShelves().filter(s => s.startsWith(z + "-"));
+      const u = zs.filter(s => occ[s]).length;
+      return `<button type="button" class="${zone === z ? "on" : ""}" data-act="zone" data-zone="${z}">${z}<small>${u}/${zs.length}</small></button>`;
+    }).join("");
+    const cells = slots.map(s => {
+      const c = occ[s];
+      if (c) {
+        return `<button type="button" class="slot occ" data-act="go" data-hash="/set/${c.id}">
+          <div class="sid">${esc(s)}</div>
+          <div class="sreg">${esc(c.regnr)}</div>
+          <div class="ssub">${esc(typShort(c.typ))} · ${esc(mm(c.monster))}</div>
+        </button>`;
+      }
+      return `<button type="button" class="slot free" data-act="ledig" data-hylla="${esc(s)}">
+        <div class="sid">${esc(s)}</div>
+        <div class="sreg">Ledig</div>
+        <div class="ssub">Plats ledig</div>
+      </button>`;
+    }).join("");
+    return `<div class="content">
+      <h2>Hyllöversikt</h2>
+      <div class="legend"><span><i class="l-occ"></i>Upptagen</span><span><i class="l-free"></i>Ledig</span></div>
+      <div class="zone-tabs">${tabs}</div>
+      <p class="meta" style="margin:-4px 0 10px">Zon ${esc(zone)} · ${used} upptagna, ${slots.length - used} lediga</p>
+      <div class="shelf-grid">${cells}</div>
+    </div>`;
+  }
+
+  function recipientsFor(riktning) {
+    if (riktning === "vs") return state.customers.filter(c => c.status === "inne" && (c.typ === "Vinter" || c.typ === "Dubb"));
+    return state.customers.filter(c => c.status === "inne" && c.typ === "Sommar");
+  }
+
+  function viewKallelse() {
+    const rik = ui.kallelseRiktning;
+    const rec = recipientsFor(rik);
+    const tpl = rik === "vs" ? state.settings.texts.kallelseVS : state.settings.texts.kallelseSV;
+    const sample = rec[0] || { namn: "Anna Lindberg", regnr: "YTP 184", typ: "Vinter", hylla: "B-02-1" };
+    const preview = renderText(tpl, sample);
+    const sent = state.kallelse && state.kallelse.riktning === rik;
+    let body;
+    if (sent) {
+      const order = { besvarad: 0, fel: 1, skickat: 2, levererat: 3 };
+      const rows = state.kallelse.mottagare.slice().sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9)).map(m => {
+        const c = state.customers.find(x => x.id === m.id);
+        return `<div class="list-item">
+          <div class="row">
+            <div class="left">
+              <div class="regnr" style="font-size:16px">${esc(c ? c.regnr : "")}</div>
+              <div class="meta">${esc(c ? c.namn : "")} · ${esc(c ? c.telefon : "")}</div>
+            </div>
+            <span class="badge ${m.status}">${esc(m.status === "besvarad" ? "Besvarad" : m.status === "levererat" ? "Levererat" : m.status === "fel" ? "Fel" : "Skickat")}</span>
+          </div>
+          ${m.svar ? `<div class="reply">${esc(m.svar)}</div>` : ""}
+        </div>`;
+      }).join("");
+      body = `<div class="banner">${state.kallelse.mottagare.length} SMS skickade · simulerad leverans</div>${rows}`;
+    } else {
+      body = `<p class="lead">${rec.length} kunder med ${rik === "vs" ? "vinterdäck" : "sommardäck"} inne får kallelsen.</p>
+        <div class="preview">
+          <div class="from">Förhandsvisning · från ${esc(state.settings.avsandare)}</div>
+          <div>${esc(preview)}</div>
+        </div>
+        <button type="button" class="btn" data-act="skicka-kallelse" ${rec.length ? "" : "disabled"}>Skicka till ${rec.length} mottagare</button>
+        <p class="fineprint">I demon skickas inga riktiga SMS. Status och några svar simuleras.</p>`;
+    }
+    return `<div class="content">
+      <h2>Säsongskallelse</h2>
+      <div class="field">
+        <label for="f-rik">Byte</label>
+        <select id="f-rik">
+          <option value="vs" ${rik === "vs" ? "selected" : ""}>Vinter → sommar</option>
+          <option value="sv" ${rik === "sv" ? "selected" : ""}>Sommar → vinter</option>
+        </select>
+      </div>
+      ${body}
+      ${sent ? `<button type="button" class="btn ghost" style="margin-top:8px" data-act="ny-kallelse">Ny förhandsvisning</button>` : ""}
+    </div>`;
+  }
+
+  function smsTypLabel(t) {
+    return ({ bekraftelse: "Bekräftelse", inlamning: "Kvitto inlämning", utlamning: "Kvitto utlämning", kallelse: "Kallelse", svar: "Svar från kund" })[t] || t;
+  }
+
+  function viewSms() {
+    const items = state.sms.slice().sort((a, b) => new Date(b.at) - new Date(a.at));
+    const rows = items.map(s => {
+      const c = state.customers.find(x => x.id === s.kundId);
+      const isIn = s.riktning === "in" || s.typ === "svar";
+      return `<div class="list-item">
+        <div class="row">
+          <div class="left">
+            <div style="font-weight:700">${esc(smsTypLabel(s.typ))}</div>
+            <div class="meta">${esc(c ? c.namn : "—")} · ${esc(c ? c.regnr : "")} · ${esc(formatTime(s.at))}</div>
+          </div>
+          <span class="badge ${s.status}">${esc(s.status === "besvarad" ? "Besvarad" : s.status === "levererat" ? "Levererat" : s.status === "fel" ? "Fel" : "Skickat")}</span>
+        </div>
+        <div class="sms-bubble-wrap" style="margin:10px 0 0">
+          <div class="sms-bubble ${isIn ? "" : "out"}">${esc(s.text)}</div>
+        </div>
+      </div>`;
+    }).join("");
+    return `<div class="content">
+      <h2>SMS-logg</h2>
+      <p class="lead">${items.length} meddelanden · ${smsThisMonth()} denna månad · ${esc(state.settings.avsandare)}</p>
+      ${rows || `<div class="empty">Inga SMS ännu.</div>`}
+    </div>`;
+  }
+
+  function viewAdmin() {
+    const t = state.settings.texts;
+    const s = state.settings;
+    const st = stats();
+    return `<div class="content">
+      <h2>Admin</h2>
+      <div class="admin-block">
+        <h3 style="margin-top:0">Verkstad</h3>
+        <dl class="plain">
+          <div><dt>Namn</dt><dd>${esc(WORKSHOP.name)}</dd></div>
+          <div><dt>Adress</dt><dd>${esc(WORKSHOP.address)}, ${esc(WORKSHOP.zip)} ${esc(WORKSHOP.city)}</dd></div>
+          <div><dt>Telefon</dt><dd>${esc(WORKSHOP.phone)}</dd></div>
+          <div><dt>E-post</dt><dd>${esc(WORKSHOP.email)}</dd></div>
+          <div><dt>Öppet</dt><dd>${esc(WORKSHOP.hours)}</dd></div>
+        </dl>
+      </div>
+      <form id="admin-form">
+        <div class="admin-block">
+          <h3 style="margin-top:0">SMS-texter</h3>
+          <div class="field">
+            <label for="a-from">Avsändarnamn</label>
+            <input id="a-from" name="avsandare" maxlength="11" value="${esc(s.avsandare)}">
+          </div>
+          <div class="field"><label for="a-bek">Bekräftelse vid registrering</label><textarea id="a-bek" name="bekraftelse" rows="4">${esc(t.bekraftelse)}</textarea></div>
+          <div class="field"><label for="a-in">Kvitto inlämning</label><textarea id="a-in" name="inlamning" rows="3">${esc(t.inlamning)}</textarea></div>
+          <div class="field"><label for="a-ut">Kvitto utlämning</label><textarea id="a-ut" name="utlamning" rows="3">${esc(t.utlamning)}</textarea></div>
+          <div class="field"><label for="a-vs">Kallelse vinter → sommar</label><textarea id="a-vs" name="kallelseVS" rows="4">${esc(t.kallelseVS)}</textarea></div>
+          <div class="field"><label for="a-sv">Kallelse sommar → vinter</label><textarea id="a-sv" name="kallelseSV" rows="4">${esc(t.kallelseSV)}</textarea></div>
+          <p class="meta">Platshållare: {namn} {regnr} {hylla} {typ}</p>
+        </div>
+        <div class="admin-block">
+          <h3 style="margin-top:0">Zoner och säsong</h3>
+          <p class="meta" style="margin-top:0">Fyra zoner (A–D), hyll-ID enligt zon-plats-nivå, t.ex. A-03-2. ${st.tot} platser totalt, ${st.inne} upptagna.</p>
+          <div class="field">
+            <label for="a-som">Sommarsäsong börjar</label>
+            <input id="a-som" name="sommarStart" type="date" value="${esc(s.sommarStart)}">
+          </div>
+          <div class="field">
+            <label for="a-vin">Vintersäsong börjar</label>
+            <input id="a-vin" name="vinterStart" type="date" value="${esc(s.vinterStart)}">
+          </div>
+        </div>
+        <button class="btn secondary" type="submit">Spara inställningar</button>
+      </form>
+      <div class="admin-block danger">
+        <h3 style="margin-top:0">Demo</h3>
+        <p class="meta">Återställer kunder, hyllor, SMS-logg och texter till ursprunglig demodata.</p>
+        <button type="button" class="btn" data-act="reset">Återställ demo</button>
+      </div>
+    </div>`;
+  }
+
+  function render() {
+    const app = document.getElementById("app");
+    const active = document.activeElement;
+    const aid = active && active.id;
+    const start = active && active.selectionStart;
+    const end = active && active.selectionEnd;
+    const scroll = window.scrollY;
+    let page = "";
+    if (ui.mode === "kund") page = viewKund();
+    else if (ui.tab === "hyllor") page = viewHyllor();
+    else if (ui.tab === "kallelse") page = viewKallelse();
+    else if (ui.tab === "sms") page = viewSms();
+    else if (ui.tab === "admin") page = viewAdmin();
+    else if (ui.tab === "detalj") page = viewDetalj();
+    else page = viewSok();
+    app.innerHTML = demoBar() + topBar() + page + botNav() + toastHtml();
+    bindDynamic();
+    if (aid) {
+      const el = document.getElementById(aid);
+      if (el) {
+        el.focus();
+        try { if (start != null) el.setSelectionRange(start, end); } catch (e) {}
+      }
+    }
+    window.scrollTo(0, scroll);
+  }
+
+  function bindDynamic() {
+    const form = document.getElementById("reg-form");
+    if (form) form.addEventListener("submit", onRegister);
+    const q = document.getElementById("f-q");
+    if (q) {
+      q.addEventListener("input", ev => {
+        ui.q = ev.target.value;
+        const hits = searchHits();
+        const meta = ev.target.closest(".content").querySelector(".meta");
+        if (meta) meta.textContent = ui.q
+          ? `${hits.length} träff${hits.length === 1 ? "" : "ar"}`
+          : `Alla ${hits.length} däckset · demodata`;
+        const holder = ev.target.closest(".content");
+        const existing = [...holder.querySelectorAll(".list-item, .empty")];
+        existing.forEach(n => n.remove());
+        const html = hits.length ? hits.map(kundCard).join("") : `<div class="empty">Ingen träff på “${esc(ui.q)}”.</div>`;
+        holder.insertAdjacentHTML("beforeend", html);
+      });
+    }
+    const rik = document.getElementById("f-rik");
+    if (rik) rik.addEventListener("change", ev => {
+      ui.kallelseRiktning = ev.target.value;
+      render();
+    });
+    const det = document.getElementById("detalj-form");
+    if (det) det.addEventListener("submit", onSaveDetalj);
+    const adm = document.getElementById("admin-form");
+    if (adm) adm.addEventListener("submit", onSaveAdmin);
+    const regIn = document.getElementById("f-regnr");
+    if (regIn) regIn.addEventListener("blur", ev => {
+      if (ev.target.value.trim()) ev.target.value = normalizeRegnr(ev.target.value);
+    });
+  }
+
+  function onRegister(ev) {
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    const regnr = normalizeRegnr(fd.get("regnr"));
+    const telefon = normalizePhone(fd.get("telefon"));
+    const typ = fd.get("typ") || "Vinter";
+    const samtycke = ev.target.querySelector("#f-samtycke").checked;
+    if (!validRegnr(regnr)) { ui.formErr = "Ange registreringsnummer med tre bokstäver och tre siffror, t.ex. ABC 123."; render(); return; }
+    if (!validPhone(telefon)) { ui.formErr = "Ange ett svenskt mobilnummer, t.ex. 070-000 00 00."; render(); return; }
+    if (!samtycke) { ui.formErr = "Samtycke till SMS krävs för att registrera."; render(); return; }
+    ui.formErr = "";
+    let c = findByReg(regnr);
+    if (c) {
+      c.telefon = telefon;
+      c.typ = typ;
+      if (c.status === "ute") c.status = "vantar";
+    } else {
+      c = {
+        id: state.nextKundId++,
+        namn: "Ny kund",
+        telefon, regnr, bil: "", typ,
+        falgar: true, monster: null, hylla: null,
+        status: "vantar",
+        kommentar: "Registrerad via QR av kund"
+      };
+      state.customers.push(c);
+    }
+    const text = renderText(state.settings.texts.bekraftelse, c);
+    addSms(c, "bekraftelse", text, "levererat");
+    saveState();
+    go("/kund/tack?id=" + c.id);
+  }
+
+  function onSaveDetalj(ev) {
+    ev.preventDefault();
+    const id = Number(ev.target.getAttribute("data-id"));
+    const c = state.customers.find(x => x.id === id);
+    if (!c) return;
+    const fd = new FormData(ev.target);
+    const hylla = (fd.get("hylla") || "").trim() || null;
+    const monster = fd.get("monster");
+    c.hylla = hylla;
+    c.monster = monster === "" ? null : Number(monster);
+    c.kommentar = (fd.get("kommentar") || "").trim();
+    if (hylla && c.status !== "inne") c.status = "inne";
+    if (!hylla && c.status === "inne") c.status = "vantar";
+    saveState();
+    toast("Uppgifterna är sparade");
+  }
+
+  function onSaveAdmin(ev) {
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    state.settings.avsandare = (fd.get("avsandare") || "WoxBil").slice(0, 11);
+    state.settings.texts.bekraftelse = fd.get("bekraftelse") || "";
+    state.settings.texts.inlamning = fd.get("inlamning") || "";
+    state.settings.texts.utlamning = fd.get("utlamning") || "";
+    state.settings.texts.kallelseVS = fd.get("kallelseVS") || "";
+    state.settings.texts.kallelseSV = fd.get("kallelseSV") || "";
+    state.settings.sommarStart = fd.get("sommarStart") || state.settings.sommarStart;
+    state.settings.vinterStart = fd.get("vinterStart") || state.settings.vinterStart;
+    saveState();
+    toast("Inställningarna är sparade");
+  }
+
+  function lamnaUt(id) {
+    const c = state.customers.find(x => x.id === id);
+    if (!c) return;
+    c.status = "ute";
+    c.hylla = null;
+    const text = renderText(state.settings.texts.utlamning, c);
+    addSms(c, "utlamning", text, "levererat");
+    saveState();
+    toast("Utlämnad · SMS-kvitto skickat till " + c.telefon);
+    render();
+  }
+
+  function lamnaIn(id) {
+    const c = state.customers.find(x => x.id === id);
+    if (!c) return;
+    if (!c.hylla) {
+      const free = freeShelves();
+      if (!free.length) { toast("Inga lediga hyllor just nu"); return; }
+      c.hylla = free[0];
+    }
+    c.status = "inne";
+    const text = renderText(state.settings.texts.inlamning, c);
+    addSms(c, "inlamning", text, "levererat");
+    saveState();
+    toast("Inlämnad på " + c.hylla + " · SMS-kvitto skickat till " + c.telefon);
+    render();
+  }
+
+  function skickaKallelse() {
+    const rik = ui.kallelseRiktning;
+    const rec = recipientsFor(rik);
+    const tpl = rik === "vs" ? state.settings.texts.kallelseVS : state.settings.texts.kallelseSV;
+    const replyMap = {};
+    FAKE_REPLIES.forEach(r => { replyMap[r.id] = r.text; });
+    const mottagare = rec.map((c, i) => {
+      const text = renderText(tpl, c);
+      let status = "levererat";
+      let svar = null;
+      if (replyMap[c.id]) { status = "besvarad"; svar = replyMap[c.id]; }
+      else if (i === rec.length - 1) status = "skickat";
+      else if (c.id === 21) status = "fel";
+      addSms(c, "kallelse", text, status === "besvarad" ? "besvarad" : status);
+      if (svar) {
+        addSms(c, "svar", svar, "besvarad", { riktning: "in" });
+      }
+      return { id: c.id, status, svar };
+    });
+    state.kallelse = { riktning: rik, at: nowIso(), mottagare };
+    saveState();
+    toast(rec.length + " kallelser skickade (simulerat)");
+    render();
+  }
+
+  function resetDemo() {
+    if (!confirm("Återställ demon till ursprunglig demodata?")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    state = seedState();
+    ui.q = "";
+    ui.success = null;
+    ui.kallelseRiktning = "vs";
+    ui.formErr = "";
+    toast("Demon är återställd");
+    go("/registrera");
+  }
+
+  document.addEventListener("click", ev => {
+    const btn = ev.target.closest("[data-act]");
+    if (!btn) return;
+    const act = btn.getAttribute("data-act");
+    if (act === "mode") {
+      if (btn.getAttribute("data-mode") === "kund") go("/registrera");
+      else go("/sok");
+    } else if (act === "tab") {
+      go("/" + btn.getAttribute("data-tab"));
+    } else if (act === "go") {
+      go(btn.getAttribute("data-hash"));
+    } else if (act === "reset") {
+      resetDemo();
+    } else if (act === "zone") {
+      ui.zone = btn.getAttribute("data-zone");
+      go("/hyllor?zon=" + ui.zone);
+    } else if (act === "lamna-ut") {
+      lamnaUt(Number(btn.getAttribute("data-id")));
+    } else if (act === "lamna-in") {
+      lamnaIn(Number(btn.getAttribute("data-id")));
+    } else if (act === "skicka-kallelse") {
+      skickaKallelse();
+    } else if (act === "ny-kallelse") {
+      state.kallelse = null;
+      saveState();
+      render();
+    } else if (act === "ledig") {
+      toast("Hylla " + btn.getAttribute("data-hylla") + " är ledig");
+    }
+  });
+
+  window.addEventListener("hashchange", () => { parseHash(); render(); });
+
+  parseHash();
+  render();
+})();
+
+  </script>
+</body>
+</html>
